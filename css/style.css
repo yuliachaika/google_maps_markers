@@ -1,0 +1,38 @@
+#map1, #map2, #map3, #map4 {
+    width: 45%;
+    height: 400px;
+  }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px;
+}
+.container::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.map__input {
+    margin: 0 auto;
+    display: block;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    transition: all .3s ease;
+}
+.map__input:hover {
+    cursor: pointer;
+    background-color: #49e9f1;
+}
+.map {
+    float: left;
+    margin: 2.5%;
+}
