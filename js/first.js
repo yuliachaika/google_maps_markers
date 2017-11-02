@@ -4,13 +4,11 @@
 
   function initMap() {
     var map1, map2, map3, map4;
-    
-    var myCenter = {lat: 46.4719221, lng: 30.7179912}; 
+
 
     var options = [
     {
       zoom: 12,
-      center: new google.maps.LatLng(myCenter),
       styles: [
       {
         "elementType": "geometry",
@@ -175,7 +173,6 @@
     },
     {
       zoom: 12,
-      center: new google.maps.LatLng(myCenter),
       styles: [
       {
         "elementType": "geometry",
@@ -402,15 +399,13 @@
     },
     {
       zoom: 12,
-      center: new google.maps.LatLng(myCenter),
       mapTypeId: 'satellite'
     },
     {
       zoom: 12,
-      center: new google.maps.LatLng(myCenter),
       mapTypeId: 'terrain'
     }  
-    ]
+    ];
 
     var markerIcons= [
 
@@ -453,9 +448,13 @@
 
     var infoWindow = new google.maps.InfoWindow(), marker, i;
 
-    for( var i = 0; i < options.length; i++ ) {
-      var map = new google.maps.Map(document.getElementsByClassName("map")[i],
-        options[i]);
+    for( var i = 0; i < markerIcons.length; i++ ) {
+      var map = new google.maps.Map(document.getElementsByClassName("map")[i], {
+        zoom: options[i].zoom,
+        center: new google.maps.LatLng(markerIcons[i].lat, markerIcons[i].lng),
+        mapTypeId: options[i].mapTypeId,
+        styles: options[i].styles
+      });
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(markerIcons[i].lat, markerIcons[i].lng),
         map: map,
@@ -465,9 +464,7 @@
         },
         title: markerIcons[i].title
       }); 
-      google.maps.event.addListener(map, 'zoom_changed', function(){
-        map.setCenter( marker.getPosition() );
-      });
+
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
           infoWindow.setContent(markerIcons[i].info);
@@ -483,44 +480,48 @@
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
-  }
-  return array;
-}
-
-$('#submit').on('click', function() {
-  markerIcons = shuffle(markerIcons);
-  console.log(markerIcons);
-  var infoWindow = new google.maps.InfoWindow(), marker, i;
-  for( var i = 0; i < options.length; i++ ) {
-    var map = new google.maps.Map(document.getElementsByClassName("map")[i],
-      options[i]);
-    var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(markerIcons[i].lat, markerIcons[i].lng),
-      map: map,
-      icon: {
-        url: markerIcons[i].icon,
-        scaledSize: new google.maps.Size(30, 30) 
-      },
-      title: markerIcons[i].title
-    }); 
-    google.maps.event.addListener(map, 'zoom_changed', function(){
-      map.setCenter( marker.getPosition() );
-    });
-    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-      return function() {
-        infoWindow.setContent(markerIcons[i].info);
-        infoWindow.open(map, marker);
       }
-    })(marker, i));
-  }
-})
+      return array;
+    }
 
-};
+    $('#submit').on('click', function() {
+      markerIcons = shuffle(markerIcons);
+      console.log(markerIcons);
+      var infoWindow = new google.maps.InfoWindow(), marker, i;
+      for( var i = 0; i < markerIcons.length; i++ ) {
+        var map = new google.maps.Map(document.getElementsByClassName("map")[i], {
+          zoom: options[i].zoom,
+          center: new google.maps.LatLng(markerIcons[i].lat, markerIcons[i].lng),
+          mapTypeId: options[i].mapTypeId,
+          styles: options[i].styles
+        });
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(markerIcons[i].lat, markerIcons[i].lng),
+          map: map,
+          icon: {
+            url: markerIcons[i].icon,
+            scaledSize: new google.maps.Size(30, 30) 
+          },
+          title: markerIcons[i].title
+        }); 
+        google.maps.event.addListener(map, 'zoom_changed', function(){
+          map.setCenter( marker.getPosition() );
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            infoWindow.setContent(markerIcons[i].info);
+            infoWindow.open(map, marker);
+          }
+        })(marker, i));
+      }
+    })
+
+  };
 
 
-$(window).on('load', function () {
-  initMap();
-});
+  $(window).on('load', function () {
+    initMap();
+  });
 
 
 })(jQuery);
